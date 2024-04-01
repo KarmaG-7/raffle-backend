@@ -11,4 +11,17 @@ const getRaffleById = async (id) => {
   ]);
   return raffle;
 };
-module.exports = { getAllRaffles, getRaffleById };
+
+const getParticipantsByRaffle = async (id) => {
+  const participants = db.any(
+    `
+    SELECT participants.*, raffles.title AS raffle
+    FROM participants
+    JOIN raffles ON raffles.id = participants.raffle_id
+    WHERE raffles.id = $1
+    `,
+    [id]
+  );
+  return participants;
+};
+module.exports = { getAllRaffles, getRaffleById, getParticipantsByRaffle };
