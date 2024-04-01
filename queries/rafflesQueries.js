@@ -24,4 +24,21 @@ const getParticipantsByRaffle = async (id) => {
   );
   return participants;
 };
-module.exports = { getAllRaffles, getRaffleById, getParticipantsByRaffle };
+
+const createNewRaffle = async (data) => {
+  const { title, secret_token } = data;
+  const newRaffle = db.one(
+    `
+    INSERT INTO raffles (title,secret_token) 
+    VALUES ($1,$2) RETURNING *
+    `,
+    [title, secret_token]
+  );
+  return newRaffle;
+};
+module.exports = {
+  getAllRaffles,
+  getRaffleById,
+  getParticipantsByRaffle,
+  createNewRaffle,
+};

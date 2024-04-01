@@ -5,9 +5,14 @@ const {
   getAllRaffles,
   getRaffleById,
   getParticipantsByRaffle,
+  createNewRaffle,
 } = require("../queries/rafflesQueries");
 
-const { validateId, raffleExist } = require("../middleware/middleware");
+const {
+  validateId,
+  raffleExist,
+  validateRaffle,
+} = require("../middleware/middleware");
 
 rafflesController.get("/", async (req, res) => {
   try {
@@ -43,4 +48,12 @@ rafflesController.get(
   }
 );
 
+rafflesController.post("/", validateRaffle, async (req, res) => {
+  try {
+    const raffle = await createNewRaffle(req.body);
+    res.status(200).json({ data: raffle });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 module.exports = rafflesController;

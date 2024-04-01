@@ -21,4 +21,15 @@ const raffleExist = async (req, res, next) => {
   next();
 };
 
-module.exports = { validateId, raffleExist };
+const validateRaffle = async (req, res, next) => {
+  const raffle = req.body;
+  const reqdKeys = ["title", "secret_token"];
+
+  for (let key of reqdKeys) {
+    if (!raffle.hasOwnProperty(key)) {
+      return res.status(400).json({ error: `${key} field is missing` });
+    }
+  }
+  next();
+};
+module.exports = { validateId, raffleExist, validateRaffle };
