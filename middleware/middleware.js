@@ -32,4 +32,22 @@ const validateRaffle = async (req, res, next) => {
   }
   next();
 };
-module.exports = { validateId, raffleExist, validateRaffle };
+
+const validateParticipant = async (req, res, next) => {
+  const participant = req.body;
+  const reqdKeys = ["first_name", "last_name", "email"];
+
+  for (let key of reqdKeys) {
+    if (!participant.hasOwnProperty(key)) {
+      return res.status(400).json({ error: `${key} field is missing` });
+    }
+  }
+  next();
+};
+
+module.exports = {
+  validateId,
+  raffleExist,
+  validateRaffle,
+  validateParticipant,
+};

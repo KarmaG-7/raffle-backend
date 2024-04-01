@@ -36,9 +36,24 @@ const createNewRaffle = async (data) => {
   );
   return newRaffle;
 };
+
+const newParticipant = async (data, id) => {
+  const { first_name, last_name, email, phone } = data;
+
+  const participant = await db.one(
+    `
+    INSERT INTO participants (first_name, last_name, email, phone, raffle_id)
+    VALUES($1,$2,$3,$4,$5) RETURNING *
+    `,
+    [first_name, last_name, email, phone, id]
+  );
+  return participant;
+};
+
 module.exports = {
   getAllRaffles,
   getRaffleById,
   getParticipantsByRaffle,
   createNewRaffle,
+  newParticipant,
 };
