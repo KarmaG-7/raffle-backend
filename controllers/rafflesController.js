@@ -8,6 +8,7 @@ const {
   createNewRaffle,
   newParticipant,
   pickWinner,
+  getWinner,
 } = require("../queries/rafflesQueries");
 
 const {
@@ -91,4 +92,19 @@ rafflesController.put(
   }
 );
 
+rafflesController.get("/:id/winner", raffleExist, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const winner = await getWinner(Number(id));
+    if (winner) {
+      res.status(200).json({ data: winner });
+    } else {
+      res
+        .status(200)
+        .json({ data: `Winner for this raffle has not been picked yet` });
+    }
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 module.exports = rafflesController;

@@ -62,6 +62,19 @@ const pickWinner = async (id) => {
   return winner;
 };
 
+const getWinner = async (id) => {
+  const winner = await db.oneOrNone(
+    `
+    SELECT participants.*, raffles.title AS raffle
+    FROM participants
+    JOIN raffles ON raffles.winner_id = participants.id
+    WHERE raffles.id = $1
+    `,
+    [id]
+  );
+  return winner;
+};
+
 module.exports = {
   getAllRaffles,
   getRaffleById,
@@ -69,4 +82,5 @@ module.exports = {
   createNewRaffle,
   newParticipant,
   pickWinner,
+  getWinner,
 };
