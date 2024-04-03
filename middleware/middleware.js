@@ -45,9 +45,24 @@ const validateParticipant = async (req, res, next) => {
   next();
 };
 
+const validateSecretToken = async (req, res, next) => {
+  const { id } = req.params;
+  const { secret_token } = req.body;
+  const raffle = await getRaffleById(Number(id));
+  const original_secret_token = raffle.secret_token;
+
+  if (secret_token !== original_secret_token) {
+    return res
+      .status(403)
+      .json({ error: `A secret token doesnot match. Try again!` });
+  }
+  next();
+};
+
 module.exports = {
   validateId,
   raffleExist,
   validateRaffle,
   validateParticipant,
+  validateSecretToken,
 };

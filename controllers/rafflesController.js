@@ -7,6 +7,7 @@ const {
   getParticipantsByRaffle,
   createNewRaffle,
   newParticipant,
+  pickWinner,
 } = require("../queries/rafflesQueries");
 
 const {
@@ -14,6 +15,7 @@ const {
   raffleExist,
   validateRaffle,
   validateParticipant,
+  validateSecretToken,
 } = require("../middleware/middleware");
 
 rafflesController.get("/", async (req, res) => {
@@ -68,6 +70,21 @@ rafflesController.post(
       const { id } = req.params;
       const participant = await newParticipant(req.body, Number(id));
       res.status(200).json({ data: participant });
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+  }
+);
+
+rafflesController.put(
+  "/:id/winner",
+  raffleExist,
+  validateSecretToken,
+  async (req, res) => {
+    try {
+      const { id } = req.params;
+      const winner = await pickWinner(Number(id));
+      res.status(200).json({ data: winner });
     } catch (err) {
       res.status(500).json({ error: err.message });
     }

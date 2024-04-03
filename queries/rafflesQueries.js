@@ -50,10 +50,23 @@ const newParticipant = async (data, id) => {
   return participant;
 };
 
+const pickWinner = async (id) => {
+  const allParticipants = await getParticipantsByRaffle(id);
+  const winnerIndex = Math.floor(Math.random() * allParticipants.length);
+  const winner = allParticipants[winnerIndex];
+
+  await db.none(`UPDATE raffles SET winner_id = $1 WHERE id = $2`, [
+    winner.id,
+    id,
+  ]);
+  return winner;
+};
+
 module.exports = {
   getAllRaffles,
   getRaffleById,
   getParticipantsByRaffle,
   createNewRaffle,
   newParticipant,
+  pickWinner,
 };
