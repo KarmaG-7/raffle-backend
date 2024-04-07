@@ -87,7 +87,11 @@ rafflesController.put(
       const winner = await pickWinner(Number(id));
       res.status(200).json({ data: winner });
     } catch (err) {
-      res.status(500).json({ error: err.message });
+      if (err.message === "No participants available to pick a winner.") {
+        res.status(400).json({ error: err.message });
+      } else {
+        res.status(500).json({ error: err.message });
+      }
     }
   }
 );
@@ -99,9 +103,7 @@ rafflesController.get("/:id/winner", raffleExist, async (req, res) => {
     if (winner) {
       res.status(200).json({ data: winner });
     } else {
-      res
-        .status(200)
-        .json({ data: `Winner for this raffle has not been picked yet` });
+      res.status(200).json({ data: null });
     }
   } catch (err) {
     res.status(500).json({ error: err.message });

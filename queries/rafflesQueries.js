@@ -52,6 +52,9 @@ const newParticipant = async (data, id) => {
 
 const pickWinner = async (id) => {
   const allParticipants = await getParticipantsByRaffle(id);
+  if (allParticipants.length === 0) {
+    throw new Error("No participants available to pick a winner.");
+  }
   const winnerIndex = Math.floor(Math.random() * allParticipants.length);
   const winner = allParticipants[winnerIndex];
 
