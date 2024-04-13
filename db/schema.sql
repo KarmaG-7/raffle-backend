@@ -1,11 +1,12 @@
-DROP TABLE IF EXISTS raffles;
-DROP TABLE IF EXISTS participants;
+DROP TABLE IF EXISTS participants CASCADE;
+DROP TABLE IF EXISTS raffles CASCADE;
 
 CREATE TABLE raffles (
   id SERIAL PRIMARY KEY,
   title VARCHAR(255),
-  secret_token VARCHAR(255)
-  
+  secret_token VARCHAR(255),
+  created timestamptz,
+  draw timestamptz DEFAULT NULL
 );
 
 CREATE TABLE participants (
@@ -20,5 +21,4 @@ CREATE TABLE participants (
 -- Add a new column to the raffles table
 ALTER TABLE raffles 
 ADD COLUMN 
-winner_id INTEGER REFERENCES participants(id) ON DELETE SET NULL;
-
+winner_id INTEGER REFERENCES participants(id) ON DELETE SET NULL
